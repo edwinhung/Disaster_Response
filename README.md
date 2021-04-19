@@ -1,16 +1,26 @@
-# Packages
-nltk, lightgbm, joblib
-# Disaster Response Pipeline Project
+# Installation
+Libraries needed in the code are: nltk, lightgbm, joblib.
 
-### Instructions:
-1. Run the following commands in the project's root directory to set up your database and model.
+If you are using Anaconda, you can run 
+> conda install nltk lightgbm joblib
 
-    - To run ETL pipeline that cleans data and stores in database
-        `python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/DisasterResponse.db`
-    - To run ML pipeline that trains classifier and saves
-        `python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl`
+The rest of libraries used in the code should be in Anaconda distribution of Python 3.8.
 
-2. Run the following command in the app's directory to run your web app.
-    `python run.py`
+# Project Motivation
+Filtering disaster messages to pull out the most relevant and important information is vital to disaster response. This project build a NLP pipeline to process text message and train a supervised learning model for 36 categories. The model can be run on a Web API to classify input message. 
 
-3. Go to http://0.0.0.0:3001/
+# Dataset
+Data used here are message and categories datasets, which contain text messages and the corresponding categories. Both datasets are from Figure Eight.
+
+# File Descriptions
+### 1. Jupyter notebooks
+ETL_Pipeline_Preparation and ML_Pipeline_Preparation notebooks interactively show case steps to build pipelines and machine learning model.
+### 2. Python script files
+- process_data.py: load and process datasets, which is then saved in DisasterResponse database
+- train_classifier.py: transform text data and feed into LightGBM model.
+
+# How to interact with this project
+Executing run.py would set up and run Web API, which is capable of showing classification result for message inputed by users. 
+
+# Acknowledgements
+Two datasets, message and cateogires, come from Figure Eight. 
