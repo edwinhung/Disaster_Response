@@ -18,9 +18,19 @@ ETL_Pipeline_Preparation and ML_Pipeline_Preparation notebooks interactively sho
 ### 2. Python script files
 - process_data.py: load and process datasets, which is then saved in DisasterResponse database
 - train_classifier.py: transform text data and feed into LightGBM model.
+- run.py: set up Web API with Flask.
 
 # How to interact with this project
-Executing run.py would set up and run Web API, which is capable of showing classification result for message inputed by users. 
+In app folder, executing run.py would set up and run Web API as the following
+> python run.py
+
+Then, go to http://127.0.0.1:3001/
+
+Web API has visualization that shows distributions of the training set. 
+Users can also input text into message box and click Classify button to see
+predictions of the model on 36 categories. 
+
+Note: this API is tested to work in Windows system.
 
 # Acknowledgements
-Two datasets, message and cateogires, come from Figure Eight. 
+Figure Eight is the source of datasets used here.
