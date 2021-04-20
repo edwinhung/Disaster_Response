@@ -92,5 +92,19 @@
     }
 </script>
 
+<div class="container" style="margin-bottom: 25px">
+    {% for word_id in word_ids %}
+        <div id="{{word_id}}"></div>
+    {% endfor %}
+</div>
+
+<script type="text/javascript">
+    const word_graphs = {{word_graphJSON | safe}};
+    const word_ids = {{word_ids | safe}};
+    for(let i in word_graphs) {
+        Plotly.plot(word_ids[i], word_graphs[i].data, word_graphs[i].layout);
+    }
+</script>
+
 </body>
 </html>

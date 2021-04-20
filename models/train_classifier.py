@@ -4,8 +4,10 @@ from sqlalchemy import create_engine
 import nltk
 nltk.download('punkt')
 nltk.download('wordnet')
+nltk.download('stopwords')
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
+from nltk.corpus import stopwords
 import re
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
@@ -27,7 +29,7 @@ def load_data(database_filepath):
         dataframe: multioutput targe columns
         index: categories labels
     """
-    engine = create_engine('sqlite:///DisasterResponse.db')
+    engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql("SELECT * FROM Response",engine)
     X = df["message"]
     y = df.iloc[:,4:]
@@ -48,9 +50,10 @@ def tokenize(text):
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
     clean_tokens = []
+    stopwords_list = stopwords.words("english")
     for token in tokens:
         clean_token = lemmatizer.lemmatize(token).lower().strip()
-        clean_tokens.append(clean_token)
+        if (clean_token not in stopwords_list): clean_tokens.append(clean_token)
     return clean_tokens
 
 

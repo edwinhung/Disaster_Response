@@ -1,6 +1,35 @@
 import sys
 import pandas as pd
+
+import nltk
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('stopwords')
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+import re
 from sqlalchemy import create_engine
+
+def tokenize(text):
+    """
+    Function to tokenize text using NLP pipeline with lemmatization
+
+    Args:
+        text (str): original text
+
+    Returns:
+        list of str: tokens of text
+    """
+    text = re.sub("[^a-zA-Z0-9]"," ",text)
+    tokens = word_tokenize(text)
+    lemmatizer = WordNetLemmatizer()
+    clean_tokens = []
+    stopwords_list = stopwords.words("english")
+    for token in tokens:
+        clean_token = lemmatizer.lemmatize(token).lower().strip()
+        if (clean_token not in stopwords_list): clean_tokens.append(clean_token)
+    return clean_tokens
 
 def load_data(messages_filepath, categories_filepath):
     """
@@ -48,6 +77,17 @@ def save_data(df, database_filename):
     engine = create_engine('sqlite:///'+database_filename)
     df.to_sql('Response', engine, index=False)
 
+def save_words_data(df, database_filename):
+    """
+    save words series in database
+
+    Retruns:
+        None
+    """
+    message = df["message"]
+    words = pd.concat(pd.Series(tokenize(t), name="word") for t in message)
+    engine = create_engine('sqlite:///'+database_filename)
+    words.to_sql('Words', engine, index=False)
 
 def main():
     if len(sys.argv) == 4:
@@ -63,7 +103,10 @@ def main():
         
         print('Saving data...\n    DATABASE: {}'.format(database_filepath))
         save_data(df, database_filepath)
-        
+
+        print('Saving words data...\n    DATABASE: {}'.format(database_filepath))
+        save_words_data(df, database_filepath)
+
         print('Cleaned data saved to database!')
     
     else:
