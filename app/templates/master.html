@@ -72,5 +72,25 @@
     }
 </script>
 
+<div class="container" style="margin-bottom: 25px">
+    <!-- {% block sub_content %}
+        <div class="page-header">
+            <h1 class="text-center">Overview of Training Dataset</h1>
+        </div>
+    {% endblock %} -->
+
+    {% for sub_id in sub_ids %}
+        <div id="{{sub_id}}"></div>
+    {% endfor %}
+</div>
+
+<script type="text/javascript">
+    const sub_graphs = {{sub_graphJSON | safe}};
+    const sub_ids = {{sub_ids | safe}};
+    for(let i in sub_graphs) {
+        Plotly.plot(sub_ids[i], sub_graphs[i].data, sub_graphs[i].layout);
+    }
+</script>
+
 </body>
 </html>

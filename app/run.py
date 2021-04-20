@@ -4,6 +4,7 @@ import pandas as pd
 
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
+import re
 
 from flask import Flask
 from flask import render_template, request, jsonify
@@ -64,7 +65,7 @@ def index():
             ],
 
             'layout': {
-                'title': 'Distribution of Message Genres',
+                'title': 'Bar chart of Message Genres',
                 'yaxis': {
                     'title': "Count"
                 },
@@ -78,9 +79,39 @@ def index():
     # encode plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
     graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
-    
+
+    subjects = ['aid_related','infrastructure_related','weather_related']
+    subjects_counts = df[subjects].sum()
+    subjects_names = list(subjects_counts.index)
+
+    sub_graphs = [
+        {
+            'data': [
+                Bar(
+                    x=subjects_names,
+                    y=subjects_counts,
+                    marker={'color':'orange'}
+                )
+            ],
+
+            'layout': {
+                'title': 'Bar chart of Subjects',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Subject"
+                }
+            }
+        }
+    ]
+
+    sub_ids = ["graph-{}".format(i+10) for i, _ in enumerate(sub_graphs)]
+    sub_graphJSON = json.dumps(sub_graphs, cls=plotly.utils.PlotlyJSONEncoder)
+
     # render web page with plotly graphs
-    return render_template('master.html', ids=ids, graphJSON=graphJSON)
+    return render_template('master.html', ids=ids, graphJSON=graphJSON, 
+                            sub_ids=sub_ids, sub_graphJSON=sub_graphJSON)
 
 
 # web page that handles user query and displays model results
