@@ -24,13 +24,18 @@ ETL_Pipeline_Preparation and ML_Pipeline_Preparation notebooks interactively sho
 In app folder, executing run.py would set up and run Web API as the following
 > python run.py
 
-Then, go to http://127.0.0.1:3001/
+Then, go to http://0.0.0.0:3001/
 
 Web API has visualization that shows distributions of the training set. 
 Users can also input text into message box and click Classify button to see
 predictions of the model on 36 categories. 
 
-Note: this API is tested to work in Windows system.
+Note: to run Web API in Windows, set host='127.0.0.1' in run.py file, and use 
+http://127.0.0.1:3001/ instead.
 
+If you would like to preprocess data and build the model from scratch , remove DisasterResponse.db first and execute the following lines in terminal:
+> python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/DisasterResponse.db
+
+> python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl
 # Acknowledgements
 Figure Eight is the source of datasets used here.
