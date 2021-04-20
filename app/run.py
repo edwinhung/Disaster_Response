@@ -13,16 +13,25 @@ from sqlalchemy import create_engine
 
 
 app = Flask(__name__)
-
+# tokenize function was not included in pipeline, so we need to define function
+# here to load model from pickle file
 def tokenize(text):
+    """
+    Function to tokenize text using NLP pipeline with lemmatization
+
+    Args:
+        text (str): original text
+
+    Returns:
+        list of str: tokens of text
+    """
+    text = re.sub("[^a-zA-Z0-9]"," ",text)
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
-
     clean_tokens = []
-    for tok in tokens:
-        clean_tok = lemmatizer.lemmatize(tok).lower().strip()
-        clean_tokens.append(clean_tok)
-
+    for token in tokens:
+        clean_token = lemmatizer.lemmatize(token).lower().strip()
+        clean_tokens.append(clean_token)
     return clean_tokens
 
 # load data

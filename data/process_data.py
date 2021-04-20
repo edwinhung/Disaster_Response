@@ -3,12 +3,27 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
+    """
+    Function to load datasets from filepaths
+
+    Returns:
+        dataframe: merged dataframe from two datasets
+    """
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     df = messages.merge(categories,on="id")
     return df
     
 def clean_data(df):
+    """
+    Transform categories labels to columns and clean data errors
+
+    Args:
+        df (dataframe): merged dataframe containing message and categories
+
+    Returns:
+        df (dataframe): clean dataframe
+    """
     categories = df["categories"].str.split(";",expand=True)
     row = categories.iloc[0]
     category_colnames = row.apply(lambda x: x[:-2])
@@ -24,6 +39,12 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    """
+    save dataframe in database
+
+    Retruns:
+        None
+    """
     engine = create_engine('sqlite:///'+database_filename)
     df.to_sql('Response', engine, index=False)
 

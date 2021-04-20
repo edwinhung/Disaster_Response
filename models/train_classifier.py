@@ -16,6 +16,17 @@ from sklearn.metrics import classification_report
 import joblib
 
 def load_data(database_filepath):
+    """
+    Load data from database and pull training set and target
+
+    Args:
+        database_filepath (str): filepath of database
+
+    Returns:
+        series: a columne of message text as training data
+        dataframe: multioutput targe columns
+        index: categories labels
+    """
     engine = create_engine('sqlite:///DisasterResponse.db')
     df = pd.read_sql("SELECT * FROM Response",engine)
     X = df["message"]
@@ -24,6 +35,15 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    """
+    Function to tokenize text using NLP pipeline with lemmatization
+
+    Args:
+        text (str): original text
+
+    Returns:
+        list of str: tokens of text
+    """
     text = re.sub("[^a-zA-Z0-9]"," ",text)
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
@@ -35,6 +55,9 @@ def tokenize(text):
 
 
 def build_model():
+    """
+    Function to build ML pipeline
+    """
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
@@ -44,12 +67,27 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """
+    Function to print classification report of predictions on text set
+
+    Args:
+        model: model to be evaluated
+        X_test (series): test set of message
+        Y_test (dataframe): test set of categories
+        category_names (index): categories labels
+
+    Print:
+        classification result
+    """
     Y_pred = model.predict(X_test)
     print(classification_report(Y_test,Y_pred,target_names=Y_test.columns))
 
 
 
 def save_model(model, model_filepath):
+    """
+    Save model in pickle file
+    """
     filename = model_filepath
     joblib.dump(model, filename)
 
